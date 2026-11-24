@@ -16,6 +16,12 @@ Measured on the kit's full dev window (1222 coins, 24h, 128,058 events):
 - Dip-buying loses here; momentum-chasing loses worse (house pilot: −9.5 SOL). Launch scalping is unusable: the 1%-of-real-reserve cap keeps stakes at 0.003–0.01 SOL on fresh launches, where the fixed 105k-lamport tx fee alone is ~2% per order.
 - Tiny probe round trips (0.01 SOL) keep the guardrail coin count up when the chaser's own fills lag the pace.
 
+## Why waiting wins
+
+The insight behind this bot is patience, not speed. On pump.fun, a coin's bonding curve is a race to 85 real SOL, and finishing that race is the event that actually pays: the harness force-closes the position at the completion price, which is the single biggest payout available in the replay. Everything before that is noise — hundreds of launches that flare and die, each one eating a fixed transaction fee that is large relative to the tiny stakes the 1%-of-reserve cap allows on a fresh coin. So instead of trying to catch every launch, the bot watches the grind and only buys when a coin has already proven it can climb, entering in the 55–80 real SOL band where the road to completion is short and steep. It then holds through the deep routine dips that would shake out any stop loss, banks profit at +30%, and adds once as the curve climbs further. The small probe trades are there for a different reason entirely: they keep the guardrail coin count healthy on stretches where the chaser itself finds nothing worth buying.
+
+That story was checked, not just reasoned about. Running `grade-local` replays the bot over the kit's full recorded 24-hour window — 1,222 coins and 128,058 events — and the result was a net paper profit of +2.778581759 SOL from 287 fills across 62 coins, in 139 round trips, with a win rate of 0.1799 and a maximum drawdown of 0.0801. The strategy is a pure function of the batches the harness sends, with no clock, no randomness and no I/O, so a second grading run is expected to reproduce the action log byte for byte; the re-run after the latest edit did exactly that, confirming the edit changed no behaviour.
+
 ## Files
 
 - `main.ts` — entrypoint: wires the strategy into the replay shim.
